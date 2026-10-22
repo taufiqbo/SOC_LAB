@@ -136,6 +136,4 @@ This is also a stronger result than it would have been on a domain-joined host: 
 
 ---
 
-## Appendix: Raw Event Reference
 
-*[Insert full JSON for rule 60122, 92657, and 92900 events here if desired]*
