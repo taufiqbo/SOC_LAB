@@ -30,7 +30,7 @@ Full network diagram and configuration notes: [`00-infrastructure/`](./00-infras
 |---|---|---|
 | [00 — Infrastructure](./00-infrastructure/) | Proxmox, networking, VM provisioning | ✅ Complete |
 | [01 — Baseline SOC](./01-baseline/) | Wazuh + Sysmon detections: RDP brute force (T1110), LSASS credential dumping (T1003.001) | ✅ Complete |
-| [02 — PCAP Analysis](./02-pcap-analysis/) | Wireshark/tshark investigation of real-world malware traffic captures | ⬜ Not started |
+| [02 — PCAP Analysis](./02-pcap-analysis/) | Wireshark/tshark investigation of real-world malware traffic captures | ✅ Complete |
 | [03 — Atomic Red Team](./03-atomic-red-team/) | ATT&CK-mapped adversary emulation and detection coverage testing | ⬜ Not started |
 | [04 — Phishing Analysis](./04-phishing-analysis/) | Header/SPF/DKIM/DMARC analysis, IOC extraction | ⬜ Not started |
 | [05 — Threat Hunting](./05-threat-hunting/) | Hypothesis-driven hunts, no starting alert | ⬜ Not started |
@@ -42,6 +42,7 @@ Full network diagram and configuration notes: [`00-infrastructure/`](./00-infras
 - Full detection chain validated end-to-end: endpoint → Sysmon → Wazuh agent → manager → alert
 - Detected RDP brute-force (Hydra) and credential dumping (Mimikatz / LSASS access) with correct MITRE ATT&CK mapping
 - Identified and documented a real gap in default detection coverage (no correlation between repeated auth failures and a subsequent success) — see [`01-baseline/detection-validation-report.md`](./01-baseline/detection-validation-report.md)
+- Reconstructed a full infection chain (delivery → DNS-over-HTTPS evasion → suspected C2) from a raw packet capture with zero endpoint telemetry — see [`02-pcap-analysis/pcap-analysis-report.md`](./02-pcap-analysis/pcap-analysis-report.md)
 
 ## Future Work
 
