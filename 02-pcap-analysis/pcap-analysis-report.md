@@ -38,7 +38,7 @@ Using DHCP, LLMNR, and Kerberos traffic, the infected host was fully identified 
 
 **Note on user identification:** the host's own machine account (`desktop-4vgyqx7$`) also appears in Kerberos traffic (frame 93) performing its own background TGT request — this is normal AD behavior and is *not* the user account. The actual interactive user was found in a separate, later AS-REQ (frame 170) whose `cname-string` has no trailing `$`.
 
-![Kerberos AS-REQ showing the logged-on user bdiaz](phase2-phase2-screenshots/04-kerberos-user-bdiaz.png)
+![Kerberos AS-REQ showing the logged-on user bdiaz](phase2-screenshots/04-kerberos-user-bdiaz.png)
 *Figure 1: Kerberos AS-REQ (frame 170), `cname-string: bdiaz` — confirmed as a human user account, distinct from the machine's own `desktop-4vgyqx7$` account seen earlier in the capture.*
 
 ---
@@ -47,12 +47,12 @@ Using DHCP, LLMNR, and Kerberos traffic, the infected host was fully identified 
 
 **Statistics → Protocol Hierarchy** was run first to get an overview of the capture before targeted analysis:
 
-![Protocol hierarchy overview](phase2-phase2-screenshots/01-protocol-hierarchy.png)
+![Protocol hierarchy overview](phase2-screenshots/01-protocol-hierarchy.png)
 *Figure 2: Protocol breakdown — notable AD/domain traffic (Kerberos, LDAP, SMB2, DCE/RPC) consistent with a domain-joined host, plus a small amount of HTTP.*
 
 **File → Export Objects → HTTP** surfaced one clearly anomalous transfer among otherwise benign connectivity-check/certificate traffic:
 
-![HTTP object export list](phase2-phase2-screenshots/02-http-export-objects.png)
+![HTTP object export list](phase2-screenshots/02-http-export-objects.png)
 *Figure 3: Export Objects list — `runner_ilove.exe` (1,646,592 bytes, `binary/octet-stream`) delivered from `107.175.82.242:9000`, the only entry served from a bare IP on a non-standard port rather than a named domain on 80/443.*
 
 | Detail | Value |
@@ -73,7 +73,7 @@ User-Agent: curl/8.21.0
 Accept: */*
 ```
 
-![GET request for the payload, no preceding delivery chain visible](phase2-phase2-screenshots/03-curl-get-request.png)
+![GET request for the payload, no preceding delivery chain visible](phase2-screenshots/03-curl-get-request.png)
 *Figure 4: The GET request (frame 23091) appears immediately after a bare TCP SYN (frame 23088) — no HTTP redirect chain, no landing page, and nothing in cleartext precedes it.*
 
 **Analysis:** the `User-Agent: curl/8.21.0` is the key detail — this was **not a user clicking a download link in a browser**. A browser would present a Chrome/Edge/Firefox UA string. `curl` making the request means something already executing on the host — a script, a dropper, or a first-stage loader — silently pulled this second-stage payload.
@@ -92,12 +92,12 @@ Traffic immediately following the payload download showed a clear two-step patte
 
 **Step 1 — DNS-over-HTTPS (DoH) to evade DNS visibility.** At frame 24922, the host queries the internal DC for `dns.google`, then immediately opens an encrypted TLS session directly to `8.8.4.4` (Google Public DNS) with SNI `dns.google`:
 
-![DNS-over-HTTPS session beginning immediately after payload download](phase2-phase2-screenshots/05-doh-query.png)
+![DNS-over-HTTPS session beginning immediately after payload download](phase2-screenshots/05-doh-query.png)
 *Figure 5: TLS Client Hello to 8.8.4.4, SNI=dns.google — DNS resolution performed over an encrypted channel straight to a public resolver, bypassing the internal DNS server that a SOC would normally have visibility into.*
 
 **Step 2 — Connection to a new, unseen IP.** Immediately after the DoH exchange completes, the host opens a connection to `195.63.128.106:443` — an IP that appears nowhere else in the capture:
 
-![New connection to 195.63.128.106 following the DoH lookup](phase2-phase2-screenshots/06-suspected-c2.png)
+![New connection to 195.63.128.106 following the DoH lookup](phase2-screenshots/06-suspected-c2.png)
 *Figure 6: Connection to 195.63.128.106:443. Wireshark's heuristic dissector labels this SSLv2/Encrypted Data, but there is no visible Client Hello, Server Hello, or certificate exchange beforehand — real TLS does not skip its handshake. This strongly suggests a custom/proprietary encrypted protocol disguised on port 443 rather than genuine HTTPS.*
 
 **Analysis:** this is a textbook evasion pattern — resolve the C2 domain via DoH (so internal DNS logs show nothing useful), then connect over what looks like HTTPS but isn't really standard TLS (so basic port/protocol-based monitoring sees "normal" 443 traffic). `195.63.128.106:443` is assessed as the likely command-and-control channel. Confirming this with certainty (true beacon interval, protocol fingerprinting via JA3/JA4) was identified as a next step but not completed in this pass — see Recommendations.
