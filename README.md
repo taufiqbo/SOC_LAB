@@ -31,7 +31,7 @@ Full network diagram and configuration notes: [`00-infrastructure/`](./00-infras
 | [00 — Infrastructure](./00-infrastructure/) | Proxmox, networking, VM provisioning | ✅ Complete |
 | [01 — Baseline SOC](./01-baseline/) | Wazuh + Sysmon detections: RDP brute force (T1110), LSASS credential dumping (T1003.001) | ✅ Complete |
 | [02 — PCAP Analysis](./02-pcap-analysis/) | Wireshark/tshark investigation of real-world malware traffic captures | ✅ Complete |
-| [03 — Atomic Red Team](./03-atomic-red-team/) | ATT&CK-mapped adversary emulation and detection coverage testing | ⬜ Not started |
+| [03 — Atomic Red Team](./03-atomic-red-team/) | ATT&CK-mapped adversary emulation and detection coverage testing | 🔄 In progress |
 | [04 — Phishing Analysis](./04-phishing-analysis/) | Header/SPF/DKIM/DMARC analysis, IOC extraction | ⬜ Not started |
 | [05 — Threat Hunting](./05-threat-hunting/) | Hypothesis-driven hunts, no starting alert | ⬜ Not started |
 | [06 — Automation](./06-automation/) | Python alert enrichment pipeline (VirusTotal/AbuseIPDB) | ⬜ Not started |
