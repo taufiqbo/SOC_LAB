@@ -5,6 +5,5 @@ Proxmox VE host setup, network design (home bridge + isolated lab bridge, NAT, f
 **Status:** Complete
 
 ## Contents
-- Network architecture diagram
-- VM specifications (Wazuh, Windows endpoint, Kali attacker)
+- [`network-diagram.md`](./network-diagram.md) — network architecture diagram (Mermaid) and VM specifications (Wazuh, Windows endpoint, Kali attacker)
 - Proxmox and network configuration notes
