@@ -2,7 +2,7 @@
 
 ATT&CK-mapped execution of Atomic Red Team tests against the lab endpoints, with detection coverage validation and gap analysis.
 
-**Status:** In progress
+**Status:** Complete
 
 ## Contents
 

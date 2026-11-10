@@ -32,10 +32,9 @@ Full network diagram and configuration notes: [`00-infrastructure/`](./00-infras
 | [01 — Baseline SOC](./01-baseline/) | Wazuh + Sysmon detections: RDP brute force (T1110), LSASS credential dumping (T1003.001) | ✅ Complete |
 | [02 — PCAP Analysis](./02-pcap-analysis/) | Wireshark/tshark investigation of real-world malware traffic captures | ✅ Complete |
 | [03 — Atomic Red Team](./03-atomic-red-team/) | ATT&CK-mapped adversary emulation and detection coverage testing | ✅ complete |
-| [04 — Phishing Analysis](./04-phishing-analysis/) | Header/SPF/DKIM/DMARC analysis, IOC extraction | ⬜ Not started |
+| [04 — Phishing Analysis](./04-phishing-analysis/) | Header/SPF/DKIM/DMARC analysis, IOC extraction | ✅ Complete |
 | [05 — Threat Hunting](./05-threat-hunting/) | Hypothesis-driven hunts, no starting alert | ⬜ Not started |
 | [06 — Automation](./06-automation/) | Python alert enrichment pipeline (VirusTotal/AbuseIPDB) | ⬜ Not started |
-
 | [07 — Capstone](./07-capstone/) | Full simulated incident, end-to-end investigation and report | ⬜ Not started |
 
 ## Highlights So Far
@@ -44,6 +43,7 @@ Full network diagram and configuration notes: [`00-infrastructure/`](./00-infras
 - Detected RDP brute-force (Hydra) and credential dumping (Mimikatz / LSASS access) with correct MITRE ATT&CK mapping
 - Identified and documented a real gap in default detection coverage (no correlation between repeated auth failures and a subsequent success) — see [`01-baseline/detection-validation-report.md`](./01-baseline/detection-validation-report.md)
 - Reconstructed a full infection chain (delivery → DNS-over-HTTPS evasion → suspected C2) from a raw packet capture with zero endpoint telemetry — see [`02-pcap-analysis/pcap-analysis-report.md`](./02-pcap-analysis/pcap-analysis-report.md)
+- Triaged a phishing email end to end: showed the sender domain was genuine rather than spoofed, traced the delivery path, and tied the malicious link to a host with a documented malware history — see [`04-phishing-analysis/phishing-analysis-report.md`](./04-phishing-analysis/phishing-analysis-report.md)
 
 ## Future Work
 
